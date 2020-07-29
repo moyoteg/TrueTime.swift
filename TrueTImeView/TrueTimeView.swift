@@ -93,7 +93,6 @@ struct TrueTimeView: View {
             TrueTimeClient.sharedInstance.start()
             
             self.viewModel.refresh()
-            self.viewModel.startTimer()
         }
         .onDisappear {
             self.viewModel.cancelTimer()

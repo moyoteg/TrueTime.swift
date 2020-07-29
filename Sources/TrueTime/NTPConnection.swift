@@ -133,9 +133,15 @@ final class NTPConnection {
     }
 
     private let dataCallback: CFSocketCallBack = { socket, type, address, data, info in
-        guard let info = info else { return }
+        guard let info = info else {
+            print("NTPConnection: info is nil")
+            return
+        }
         let client = Unmanaged<NTPConnection>.fromOpaque(info).takeUnretainedValue()
-        guard let socket = socket, CFSocketIsValid(socket) else { return }
+        guard let socket = socket, CFSocketIsValid(socket) else {
+            print("NTPConnection: socket is not valid")
+            return
+        }
 
         // Can't use switch here as these aren't defined as an enum.
         if type == .dataCallBack {
@@ -154,7 +160,7 @@ final class NTPConnection {
     private static let callbackFlags: CFOptionFlags = callbackTypes.map {
         $0.rawValue
     }.reduce(0, |)
-    private let lockQueue = DispatchQueue(label: "com.instacart.ntp.connection")
+    private let lockQueue = DispatchQueue(label: "ntp.connection")
     private var attempts: Int = 0
     private var callbackQueue: DispatchQueue?
     private var didTimeout: Bool = false
@@ -237,8 +243,14 @@ private extension NTPConnection {
     func handleResponse(_ data: Data) {
         let responseTicks = timeval.uptime()
         lockQueue.async {
-            guard self.started else { return } // Socket closed.
-            guard data.count == MemoryLayout<NTP.Packet>.size else { return } // Invalid packet length.
+            guard self.started else {
+                print("NTPConnection: socket is not started")
+                return
+            }
+            guard data.count == MemoryLayout<NTP.Packet>.size else {
+                print("NTPConnection: invalid packet length")
+                return
+            }
             guard let startTime = self.startTime, let requestTicks = self.requestTicks else {
                 assertionFailure("Uninitialized timestamps")
                 return
@@ -252,6 +264,7 @@ private extension NTPConnection {
 
             guard let response = NTPResponse(packet: packet, responseTime: responseTime) else {
                 self.complete(.failure(NSError(trueTimeError: .badServerResponse)))
+                print("NTPConnection: invalid NTPResponse")
                 return
             }
 

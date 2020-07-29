@@ -50,14 +50,19 @@ final class NTPClient {
         queue.async {
             precondition(self.reachability.callback != nil,
                          "Must start client before retrieving time")
+            
             if let time = self.referenceTime {
-                callbackQueue.async { first?(.success(time)) }
+                callbackQueue.async {
+                    first?(.success(time))
+                }
             } else if let first = first {
                 self.startCallbacks.append((callbackQueue, first))
             }
             
             if let time = self.referenceTime, self.finished {
-                callbackQueue.async { completion?(.success(time)) }
+                callbackQueue.async {
+                    completion?(.success(time))
+                }
             } else {
                 if let completion = completion {
                     self.completionCallbacks.append((callbackQueue, completion))
@@ -80,7 +85,7 @@ final class NTPClient {
     }
     
     var logger: LogCallback? = defaultLogger
-    private let queue = DispatchQueue(label: "com.instacart.ntp.client")
+    private let queue = DispatchQueue(label: "ntp.client")
     private let reachability = Reachability()
     private var completionCallbacks: [(DispatchQueue, ReferenceTimeCallback)] = []
     private var connections: [NTPConnection] = []

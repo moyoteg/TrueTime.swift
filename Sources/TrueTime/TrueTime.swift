@@ -8,7 +8,7 @@
 
 import Foundation
 
-let TrueTimeErrorDomain = "com.instacart.TrueTimeErrorDomain"
+let TrueTimeErrorDomain = "TrueTimeErrorDomain"
 let TrueTimeUpdatedNotification = "TrueTimeUpdatedNotification"
 
 @objc public enum TrueTimeError: Int {
