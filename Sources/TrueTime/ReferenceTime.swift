@@ -27,14 +27,14 @@ struct FrozenNetworkTime: FrozenTime {
     let time: Date
     let uptime: timeval
     let serverResponse: NTPResponse
-    let startTime: ntp_time_t
+    let startTime: NTP.Time64
     let sampleSize: Int?
     let host: String?
 
     init(time: Date,
          uptime: timeval,
          serverResponse: NTPResponse,
-         startTime: ntp_time_t,
+         startTime: NTP.Time64,
          sampleSize: Int? = 0,
          host: String? = nil) {
         self.time = time

@@ -13,9 +13,9 @@ import SwiftCheck
 
 final class NTPExtensionsSpec: QuickSpec {
     override func spec() {
-        it("ntp_time64_t") {
+        it("NTP.Time64") {
             property("Matches timeval precision") <- forAll(timeval.arbitraryPositive) { time in
-                let ntp = ntp_time64_t(timeSince1970: time)
+                let ntp = NTP.Time64(timeSince1970: time)
                 return ntp.milliseconds == time.milliseconds
             }
         }

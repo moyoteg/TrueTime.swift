@@ -45,7 +45,6 @@
 		041BC56024D0F94C00FCAABF /* SocketAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041BC53B24D0F93E00FCAABF /* SocketAddress.swift */; };
 		041BC56124D0F94C00FCAABF /* TimedOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041BC53524D0F93E00FCAABF /* TimedOperation.swift */; };
 		041BC56224D0F94C00FCAABF /* TrueTime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041BC53D24D0F93E00FCAABF /* TrueTime.swift */; };
-		041BC56E24D1024800FCAABF /* TrueTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 041BC56C24D1024800FCAABF /* TrueTime.m */; };
 		041BC59424D1102F00FCAABF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041BC59324D1102F00FCAABF /* AppDelegate.swift */; };
 		041BC59624D1102F00FCAABF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041BC59524D1102F00FCAABF /* SceneDelegate.swift */; };
 		041BC59824D1102F00FCAABF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041BC59724D1102F00FCAABF /* ContentView.swift */; };
@@ -58,6 +57,7 @@
 		041BC5AF24D1196000FCAABF /* ArbitraryExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041BC5AC24D1196000FCAABF /* ArbitraryExtensions.swift */; };
 		041BC5B024D1196000FCAABF /* NTPExtensionsSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041BC5AD24D1196000FCAABF /* NTPExtensionsSpec.swift */; };
 		041BC5B124D1196000FCAABF /* NTPIntegrationSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041BC5AE24D1196000FCAABF /* NTPIntegrationSpec.swift */; };
+		04B035AE24D1EF2400ED9E3F /* NTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B035AD24D1EF2400ED9E3F /* NTP.swift */; };
 		OBJ_29 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
 		OBJ_40 /* TrueTimeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* TrueTimeTests.swift */; };
 		OBJ_41 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* XCTestManifests.swift */; };
@@ -116,10 +116,6 @@
 		041BC53D24D0F93E00FCAABF /* TrueTime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrueTime.swift; sourceTree = "<group>"; };
 		041BC53E24D0F93E00FCAABF /* NTPResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTPResponse.swift; sourceTree = "<group>"; };
 		041BC56424D0F96D00FCAABF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		041BC56A24D0FAFC00FCAABF /* ntp_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntp_types.h; sourceTree = "<group>"; };
-		041BC56B24D0FF5400FCAABF /* TrueTime-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TrueTime-Bridging-Header.h"; sourceTree = "<group>"; };
-		041BC56C24D1024800FCAABF /* TrueTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrueTime.m; sourceTree = "<group>"; };
-		041BC56D24D1024800FCAABF /* TrueTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrueTime.h; sourceTree = "<group>"; };
 		041BC59124D1102F00FCAABF /* TrueTimeView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrueTimeView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		041BC59324D1102F00FCAABF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		041BC59524D1102F00FCAABF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -132,6 +128,7 @@
 		041BC5AC24D1196000FCAABF /* ArbitraryExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArbitraryExtensions.swift; sourceTree = "<group>"; };
 		041BC5AD24D1196000FCAABF /* NTPExtensionsSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTPExtensionsSpec.swift; sourceTree = "<group>"; };
 		041BC5AE24D1196000FCAABF /* NTPIntegrationSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTPIntegrationSpec.swift; sourceTree = "<group>"; };
+		04B035AD24D1EF2400ED9E3F /* NTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NTP.swift; sourceTree = "<group>"; };
 		OBJ_12 /* TrueTimeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrueTimeTests.swift; sourceTree = "<group>"; };
 		OBJ_13 /* XCTestManifests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestManifests.swift; sourceTree = "<group>"; };
 		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
@@ -228,7 +225,7 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
 				OBJ_6 /* Package.swift */,
@@ -238,7 +235,6 @@
 				OBJ_14 /* Products */,
 				041BC56324D0F96D00FCAABF /* Frameworks */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
 		OBJ_7 /* Sources */ = {
@@ -252,13 +248,10 @@
 		OBJ_8 /* TrueTime */ = {
 			isa = PBXGroup;
 			children = (
-				041BC56B24D0FF5400FCAABF /* TrueTime-Bridging-Header.h */,
-				041BC56A24D0FAFC00FCAABF /* ntp_types.h */,
-				041BC56D24D1024800FCAABF /* TrueTime.h */,
-				041BC56C24D1024800FCAABF /* TrueTime.m */,
 				041BC53A24D0F93E00FCAABF /* Endian.swift */,
 				041BC53424D0F93E00FCAABF /* GCDLock.swift */,
 				041BC53824D0F93E00FCAABF /* HostResolver.swift */,
+				04B035AD24D1EF2400ED9E3F /* NTP.swift */,
 				041BC53624D0F93E00FCAABF /* NTPClient.swift */,
 				041BC53724D0F93E00FCAABF /* NTPConnection.swift */,
 				041BC53924D0F93E00FCAABF /* NTPExtensions.swift */,
@@ -370,7 +363,7 @@
 				en,
 				Base,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_14 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -417,7 +410,6 @@
 				041BC54F24D0F94A00FCAABF /* NTPConnection.swift in Sources */,
 				041BC55324D0F94A00FCAABF /* ReferenceTime.swift in Sources */,
 				041BC55424D0F94A00FCAABF /* SocketAddress.swift in Sources */,
-				041BC56E24D1024800FCAABF /* TrueTime.m in Sources */,
 				041BC55624D0F94A00FCAABF /* TrueTime.swift in Sources */,
 				041BC55524D0F94A00FCAABF /* TimedOperation.swift in Sources */,
 				041BC55024D0F94A00FCAABF /* NTPExtensions.swift in Sources */,
@@ -425,6 +417,7 @@
 				041BC54C24D0F94A00FCAABF /* GCDLock.swift in Sources */,
 				041BC54E24D0F94A00FCAABF /* NTPClient.swift in Sources */,
 				041BC55224D0F94A00FCAABF /* Reachability.swift in Sources */,
+				04B035AE24D1EF2400ED9E3F /* NTP.swift in Sources */,
 				041BC55124D0F94A00FCAABF /* NTPResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -642,7 +635,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Sources/TrueTime/TrueTime-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGET_NAME = TrueTime;
@@ -674,7 +666,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Sources/TrueTime/TrueTime-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGET_NAME = TrueTime;
 				TVOS_DEPLOYMENT_TARGET = 9.0;

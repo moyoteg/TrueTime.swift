@@ -67,8 +67,8 @@ extension NTPTimevalConvertible {
     }
 }
 
-extension ntp_time32_t: NTPTimeType {}
-extension ntp_time64_t: NTPTimevalConvertible {}
+extension NTP.Time32: NTPTimeType {}
+extension NTP.Time64: NTPTimevalConvertible {}
 
 extension TimeInterval {
     init(milliseconds: Int64) {
@@ -81,7 +81,7 @@ extension TimeInterval {
 }
 
 protocol ByteRepresentable {
-    init()
+//    init()
 }
 
 extension ByteRepresentable {
@@ -91,7 +91,7 @@ extension ByteRepresentable {
     }
 }
 
-extension ntp_packet_t: ByteRepresentable {}
+extension NTP.Packet: ByteRepresentable {}
 extension sockaddr_in: ByteRepresentable {}
 extension sockaddr_in6: ByteRepresentable {}
 extension sockaddr_in6: CustomStringConvertible {
@@ -147,34 +147,40 @@ extension NTPResponse: CustomStringConvertible {
     }
 }
 
-extension ntp_packet_t: CustomStringConvertible {
+extension NTP.Packet: CustomStringConvertible {
     public var description: String {
-        let referenceTime = reference_time.milliseconds
-        let originateTime = originate_time.milliseconds
-        let receiveTime = receive_time.milliseconds
-        let transmitTime = transmit_time.milliseconds
-        return "\(type(of: self))(client_mode: \(client_mode.description), " +
-                                 "version_number: \(version_number.description), " +
-                                 "leap_indicator: \(leap_indicator.description), " +
-                                 "stratum: \(stratum.description), " +
-                                 "poll: \(poll.description), " +
-                                 "precision: \(precision.description), " +
-                                 "root_delay: \(root_delay), " +
-                                 "root_dispersion: \(root_dispersion), " +
-                                 "reference_id: \(reference_id), " +
-                                 "reference_time: \(referenceTime) ms, " +
-                                 "originate_time: \(originateTime) ms, " +
-                                 "receive_time: \(receiveTime) ms, " +
-                                 "transmit_time: \(transmitTime) ms)"
+        let referenceTime = reference_time?.milliseconds
+        let originateTime = originate_time?.milliseconds
+        let receiveTime = receive_time?.milliseconds
+        let transmitTime = transmit_time?.milliseconds
+        return """
+        \(type(of: self))
+        client_mode: \(client_mode.description)
+        "version_number: \(version_number.description)
+        leap_indicator: \(String(describing: leap_indicator?.description))
+        stratum: \(String(describing: stratum?.description))
+        poll: \(String(describing: poll?.description))
+        precision: \(String(describing: precision?.description))
+        root_delay: \(String(describing: root_delay))
+        root_dispersion: \(String(describing: root_dispersion))
+        reference_id: \(String(describing: reference_id))
+        reference_time: \(String(describing: referenceTime)) ms
+        originate_time: \(String(describing: originateTime)) ms
+        receive_time: \(String(describing: receiveTime)) ms
+        transmit_time: \(String(describing: transmitTime)) ms
+        """
     }
 }
 
-extension ntp_packet_t {
+extension NTP.Packet {
     var timeDescription: String {
-        return "\(type(of: self))(reference_time: + \(reference_time.milliseconds) ms, " +
-                                 "originate_time: \(originate_time.milliseconds) ms, " +
-                                 "receive_time: \(receive_time.milliseconds) ms, " +
-                                 "transmit_time: \(transmit_time.milliseconds) ms)"
+        return """
+        \(type(of: self))
+        reference_time: + \(String(describing: reference_time?.milliseconds)) ms 
+        originate_time: \(String(describing: originate_time?.milliseconds)) ms
+        receive_time: \(String(describing: receive_time?.milliseconds)) ms
+        transmit_time: \(String(describing: transmit_time?.milliseconds)) ms
+        """
     }
 }
 

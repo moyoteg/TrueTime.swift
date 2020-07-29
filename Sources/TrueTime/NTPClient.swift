@@ -21,7 +21,7 @@ final class NTPClient {
     init(config: NTPConfig) {
         self.config = config
     }
-
+    
     func start(pool: [String], port: Int) {
         precondition(!pool.isEmpty, "Must include at least one pool URL")
         queue.async {
@@ -34,7 +34,7 @@ final class NTPClient {
             self.startTimer()
         }
     }
-
+    
     func pause() {
         queue.async {
             self.cancelTimer()
@@ -43,7 +43,7 @@ final class NTPClient {
             self.stopQueue()
         }
     }
-
+    
     func fetchIfNeeded(queue callbackQueue: DispatchQueue,
                        first: ReferenceTimeCallback?,
                        completion: ReferenceTimeCallback?) {
@@ -55,7 +55,7 @@ final class NTPClient {
             } else if let first = first {
                 self.startCallbacks.append((callbackQueue, first))
             }
-
+            
             if let time = self.referenceTime, self.finished {
                 callbackQueue.async { completion?(.success(time)) }
             } else {
@@ -66,19 +66,19 @@ final class NTPClient {
             }
         }
     }
-
+    
     private let referenceTimeLock: GCDLock<ReferenceTime?> = GCDLock(value: nil)
     var referenceTime: ReferenceTime? {
         get { return referenceTimeLock.read() }
         set { referenceTimeLock.write(newValue) }
     }
-
+    
     fileprivate func debugLog(_ message: @autoclosure () -> String) {
-#if DEBUG_LOGGING
+        #if DEBUG_LOGGING
         logger?(message())
-#endif
+        #endif
     }
-
+    
     var logger: LogCallback? = defaultLogger
     private let queue = DispatchQueue(label: "com.instacart.ntp.client")
     private let reachability = Reachability()
@@ -109,7 +109,7 @@ private extension NTPClient {
             startPool(pool: pool, port: port)
         }
     }
-
+    
     func startTimer() {
         cancelTimer()
         if let referenceTime = referenceTime {
@@ -120,24 +120,23 @@ private extension NTPClient {
             timer?.resume()
         }
     }
-
+    
     func cancelTimer() {
         timer?.cancel()
         timer = nil
     }
-
+    
     func startPool(pool: [String], port: Int) {
         guard !started && !finished else {
             debugLog("Already \(started ? "started" : "finished")")
             return
         }
-
+        
         startTime = CFAbsoluteTimeGetCurrent()
         debugLog("Resolving pool: \(pool)")
-        HostResolver.resolve(hosts: pool.map { ($0, port) },
-                             timeout: config.timeout,
-                             logger: logger,
-                             callbackQueue: queue) { resolver, result in
+        HostResolver.resolve(hosts: pool.map { ($0, port) }, timeout: config.timeout, logger: logger, callbackQueue: queue)
+        { resolver, result in
+            
             guard self.started && !self.finished else {
                 self.debugLog("Got DNS response after queue stopped: \(resolver), \(result)")
                 return
@@ -146,45 +145,44 @@ private extension NTPClient {
                 self.debugLog("Got DNS response after pool URLs changed: \(resolver), \(result)")
                 return
             }
-
+            
             switch result {
             case let .success(addresses): self.query(addresses: addresses, host: resolver.host)
             case let .failure(error): self.finish(.failure(error))
             }
         }
     }
-
+    
     func stopQueue() {
         debugLog("Stopping queue")
         startTime = nil
         connections.forEach { $0.close(waitUntilFinished: true) }
         connections = []
     }
-
+    
     func invalidate() {
         stopQueue()
         finished = false
         if let referenceTime = referenceTime,
-               reachability.status != .notReachable && !pool.isEmpty {
+            reachability.status != .notReachable && !pool.isEmpty {
             debugLog("Invalidated time \(referenceTime.debugDescription)")
             startPool(pool: pool, port: port)
         }
     }
-
+    
     func query(addresses: [SocketAddress], host: String) {
         var results: [String: [FrozenNetworkTimeResult]] = [:]
-        connections = NTPConnection.query(addresses: addresses,
-                                          config: config,
-                                          logger: logger,
-                                          callbackQueue: queue) { connection, result in
+        connections = NTPConnection.query(addresses: addresses, config: config, logger: logger, callbackQueue: queue)
+        { connection, result in
+            
             guard self.started && !self.finished else {
                 self.debugLog("Got NTP response after queue stopped: \(result)")
                 return
             }
-
+            
             let host = connection.address.host
             results[host] = (results[host] ?? []) + [result]
-
+            
             let responses = Array(results.values)
             let sampleSize = responses.map { $0.count }.reduce(0, +)
             let expectedCount = addresses.count * self.config.numberOfSamples
@@ -192,21 +190,22 @@ private extension NTPClient {
             let times = responses.map { results in
                 results.compactMap { try? $0.get() }
             }
-
+            
             self.debugLog("Got \(sampleSize) out of \(expectedCount)")
-            if let time = bestTime(fromResponses: times) {
+            
+            if let time = NTPClient.bestTime(fromResponses: times) {
                 let time = FrozenNetworkTime(networkTime: time, sampleSize: sampleSize, host: host)
                 self.debugLog("\(atEnd ? "Final" : "Best") time: \(time), " +
-                              "δ: \(time.serverResponse.delay), " +
-                              "θ: \(time.serverResponse.offset)")
-
+                    "δ: \(time.serverResponse.delay), " +
+                    "θ: \(time.serverResponse.offset)")
+                
                 let referenceTime = self.referenceTime ?? ReferenceTime(time)
                 if self.referenceTime == nil {
                     self.referenceTime = referenceTime
                 } else {
                     referenceTime.underlyingValue = time
                 }
-
+                
                 if atEnd {
                     self.finish(.success(referenceTime))
                 } else {
@@ -219,12 +218,12 @@ private extension NTPClient {
                 } else {
                     error = NSError(trueTimeError: .noValidPacket)
                 }
-
+                
                 self.finish(ReferenceTimeResult.failure(error))
             }
         }
     }
-
+    
     func updateProgress(_ result: ReferenceTimeResult) {
         let endTime = CFAbsoluteTimeGetCurrent()
         let hasStartCallbacks = !startCallbacks.isEmpty
@@ -237,10 +236,11 @@ private extension NTPClient {
         if hasStartCallbacks {
             logDuration(endTime, to: "get first result")
         }
-
-        NotificationCenter.default.post(Notification(name: .TrueTimeUpdated, object: self, userInfo: nil))
+        
+        // TODO: update with Combine
+        NotificationCenter.default.post(Notification(name: Notification.Name(rawValue: TrueTimeUpdatedNotification), object: self, userInfo: nil))
     }
-
+    
     func finish(_ result: ReferenceTimeResult) {
         let endTime = CFAbsoluteTimeGetCurrent()
         updateProgress(result)
@@ -255,10 +255,18 @@ private extension NTPClient {
         stopQueue()
         startTimer()
     }
-
+    
     func logDuration(_ endTime: CFAbsoluteTime, to description: String) {
         if let startTime = startTime {
             debugLog("Took \(endTime - startTime)s to \(description)")
         }
+    }
+    
+    static func bestTime(fromResponses times: [[FrozenNetworkTime]]) -> FrozenNetworkTime? {
+        let bestTimes = times.map { serverTimes -> FrozenNetworkTime? in
+            serverTimes.min { $0.serverResponse.delay < $1.serverResponse.delay }
+        }.compactMap { $0 }.sorted { $0.serverResponse.offset < $1.serverResponse.offset }
+        
+        return bestTimes.isEmpty ? nil : bestTimes[bestTimes.count / 2]
     }
 }

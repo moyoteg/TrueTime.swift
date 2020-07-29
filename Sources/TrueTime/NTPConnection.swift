@@ -162,7 +162,7 @@ final class NTPConnection {
     private var requestTicks: timeval?
     private var socket: CFSocket?
     private var source: CFRunLoopSource?
-    private var startTime: ntp_time_t?
+    private var startTime: NTP.Time64?
     private var finished: Bool = false
 }
 
@@ -199,24 +199,35 @@ private extension NTPConnection {
 
     func requestTime() {
         lockQueue.async {
+            
             guard let socket = self.socket else {
                 self.debugLog("Socket closed")
                 return
             }
 
-            self.startTime = ntp_time_t(timeSince1970: .now())
+            self.startTime = NTP.Time64(timeSince1970: .now())
+            
             self.requestTicks = .uptime()
+            
             if let startTime = self.startTime {
-                let packet = self.requestPacket(startTime).bigEndian
+                
+                let packet = NTP.Packet(time: startTime).bigEndian
+                
                 let interval = TimeInterval(milliseconds: startTime.milliseconds)
+                
                 self.debugLog("Sending time: \(Date(timeIntervalSince1970: interval))")
+                
                 let err = CFSocketSendData(socket,
                                            self.address.networkData as CFData,
                                            packet.data as CFData,
                                            self.timeout)
+                
                 if err != .success {
+                    
                     self.complete(.failure(NSError(errno: errno)))
+                    
                 } else {
+                    
                     self.startTimer()
                 }
             }
@@ -227,13 +238,15 @@ private extension NTPConnection {
         let responseTicks = timeval.uptime()
         lockQueue.async {
             guard self.started else { return } // Socket closed.
-            guard data.count == MemoryLayout<ntp_packet_t>.size else { return } // Invalid packet length.
+            guard data.count == MemoryLayout<NTP.Packet>.size else { return } // Invalid packet length.
             guard let startTime = self.startTime, let requestTicks = self.requestTicks else {
                 assertionFailure("Uninitialized timestamps")
                 return
             }
 
-            let packet = data.withUnsafeBytes { $0.load(as: ntp_packet_t.self) }.nativeEndian
+            // TODO: figure out this load
+            let packet = data.withUnsafeBytes { $0.load(as: NTP.Packet.self) }.nativeEndian
+            
             let responseTime = startTime.milliseconds + (responseTicks.milliseconds -
                                                          requestTicks.milliseconds)
 
@@ -252,13 +265,5 @@ private extension NTPConnection {
                                                      serverResponse: response,
                                                      startTime: startTime)))
         }
-    }
-
-    func requestPacket(_ time: ntp_time_t) -> ntp_packet_t {
-        var packet = ntp_packet_t()
-        packet.client_mode = 3
-        packet.version_number = 3
-        packet.transmit_time = time
-        return packet
     }
 }

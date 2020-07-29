@@ -29,33 +29,33 @@ extension NetworkOrderConvertible {
 }
 
 extension Int: NetworkOrderConvertible {}
-extension ntp_time32_t: NetworkOrderConvertible {
-    var byteSwapped: ntp_time32_t {
-        return ntp_time32_t(whole: whole.byteSwapped, fraction: fraction.byteSwapped)
+extension NTP.Time32: NetworkOrderConvertible {
+    var byteSwapped: NTP.Time32 {
+        return NTP.Time32(whole: whole.byteSwapped, fraction: fraction.byteSwapped)
     }
 }
 
-extension ntp_time64_t: NetworkOrderConvertible {
-    var byteSwapped: ntp_time64_t {
-        return ntp_time64_t(whole: whole.byteSwapped, fraction: fraction.byteSwapped)
+extension NTP.Time64: NetworkOrderConvertible {
+    var byteSwapped: NTP.Time64 {
+        return NTP.Time64(whole: whole.byteSwapped, fraction: fraction.byteSwapped)
     }
 }
 
-extension ntp_packet_t: NetworkOrderConvertible {
-    var byteSwapped: ntp_packet_t {
-        return ntp_packet_t(client_mode: client_mode,
+extension NTP.Packet: NetworkOrderConvertible {
+    var byteSwapped: NTP.Packet {
+        return NTP.Packet(client_mode: client_mode,
                             version_number: version_number,
                             leap_indicator: leap_indicator,
                             stratum: stratum,
                             poll: poll,
                             precision: precision,
-                            root_delay: root_delay.byteSwapped,
-                            root_dispersion: root_dispersion.byteSwapped,
+                            root_delay: root_delay?.byteSwapped,
+                            root_dispersion: root_dispersion?.byteSwapped,
                             reference_id: reference_id,
-                            reference_time: reference_time.byteSwapped,
-                            originate_time: originate_time.byteSwapped,
-                            receive_time: receive_time.byteSwapped,
-                            transmit_time: transmit_time.byteSwapped)
+                            reference_time: reference_time?.byteSwapped,
+                            originate_time: originate_time?.byteSwapped,
+                            receive_time: receive_time?.byteSwapped,
+                            transmit_time: transmit_time?.byteSwapped)
     }
 }
 
